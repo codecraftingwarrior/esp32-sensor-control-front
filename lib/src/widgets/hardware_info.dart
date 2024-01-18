@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:logging/logging.dart';
 import 'dart:developer' as developer;
+
+import '../services/esp32_client.dart';
 
 class HardwareInfo extends StatefulWidget {
   final String label;
@@ -19,12 +22,16 @@ class HardwareInfo extends StatefulWidget {
 
 class _HardwareInfoState extends State<HardwareInfo> {
   String _id = 'Chargement...'; // Valeur initiale
+  ESP32Client esp32client = ESP32Client();
+  final log = Logger('HardwareInfo');
 
   @override
   void initState() {
     super.initState();
     //_fetchData();
   }
+
+
 
   Future<void> _fetchData() async {
     const String apiUrl =

@@ -18,7 +18,7 @@ class MyFlutterApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home:
-          const HomeScreen(), // Utilisation de HomeScreen comme écran principal
+      HomeScreen(), // Utilisation de HomeScreen comme écran principal
     );
   }
 }
