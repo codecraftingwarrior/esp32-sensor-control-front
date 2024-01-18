@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sensor_control_front/src/widgets/LineChartSample.dart';
 import '../models/Sensor.dart';
 import '../models/led.dart';
 import '../services/esp32_client.dart';
@@ -35,17 +36,19 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: Colors.transparent,
               elevation: 0,
               title: const Text(
-                'Hello there!',
+                'SmartControl',
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w800,
-                    fontSize: 48),
+                    fontSize: 30),
               ),
             ),
             body: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Welcome to your smart device',
                         style: TextStyle(
@@ -106,6 +109,54 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 18),
+                    Container(
+                        padding: EdgeInsets.symmetric(horizontal: 17, vertical: 15),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Evolution lumiére 3 derniers Jour', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            LineChartSample(),
+                          ],
+                        )
+                    ),
+                    SizedBox(height: 18),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 17, vertical: 15),
+                      decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Evolution température 3 derniers Jour', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            LineChartSample(),
+                          ],
+                        )
                     ),
                   ],
                 ),
