@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -25,40 +26,42 @@ class _HardwareInfoState extends State<HardwareInfo> {
   ESP32Client esp32client = ESP32Client();
   final log = Logger('HardwareInfo');
 
+  final DatabaseReference _readingsRef =
+      FirebaseDatabase.instance.ref('readings');
+  dynamic valueDisplay = 0;
+
   @override
   void initState() {
     super.initState();
-    //_fetchData();
-  }
-
-
-
-  Future<void> _fetchData() async {
-    const String apiUrl =
-        'https://quizzapi.jomoreschi.fr/api/v1/quiz?limit=5&category=tv_cinema&difficulty=facile';
-    try {
-      final response = await http.get(Uri.parse(apiUrl));
-      final data = json.decode(response.body);
-      if (response.statusCode == 200 && data.quizzes is List && data.isNotEmpty) {
-        setState(() {
-          _id = data[0]["_id"] ??
-              'ID non trouvé'; // Met à jour avec l'ID, sinon affiche 'ID non trouvé'
-        });
-      } else {
-        setState(() {
-          _id = 'Erreur de chargement'; // En cas d'erreur de réponse
-        });
-        developer.log(response.body, name: 'rest api call');
-      }
-    } catch (e) {
-      setState(() {
-        _id = 'Erreur de connexion'; // En cas d'exception réseau
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder<DatabaseEvent>(
+      stream: _readingsRef.onValue,
+      builder: (context, snapshot) {
+        if (snapshot.hasData &&
+            !snapshot.hasError &&
+            snapshot.data!.snapshot.value != null) {
+          Map<dynamic, dynamic> readings =
+              Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
+          if (widget.label == 'RAM') {
+            valueDisplay = readings['ram'];
+          } else {
+            valueDisplay = readings['cpu'];
+          }
+
+          // Vous pouvez maintenant utiliser ces valeurs pour les afficher dans votre UI
+          // Par exemple, si ce DataDisplay est pour la température:
+          return _render();
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Container _render() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
@@ -91,10 +94,10 @@ class _HardwareInfoState extends State<HardwareInfo> {
             ],
           ),
           SizedBox(height: 15),
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(left: 20),
             child: Text(
-              '10%', // Affiche l'ID ou le message de chargement
+              "${valueDisplay.toString()}%", // Affiche l'ID ou le message de chargement
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 45,

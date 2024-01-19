@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "902364881984",
+    "firebase_url": "https://esp32-sensor-6ec3b-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "esp32-sensor-6ec3b",
+    "storage_bucket": "esp32-sensor-6ec3b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:902364881984:android:b92033fbb638505ac4aba5",
+        "android_client_info": {
+          "package_name": "com.control.sensor_control_front"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvz0y-eQ9oiYj30FqU6tkfNQO-KLRS3WU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

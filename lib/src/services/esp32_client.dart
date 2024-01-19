@@ -24,7 +24,7 @@ class ESP32Client {
 
     List<dynamic> jsonList = json.decode(response.body);
 
-    return jsonList.reversed.skip(1).map((jsonItem) => LED.fromJson(rawJson: jsonItem)).toList();
+    return jsonList.map((jsonItem) => LED.fromJson(rawJson: jsonItem)).toList();
   }
 
   Future<List<Sensor>> fetchSensors() async {

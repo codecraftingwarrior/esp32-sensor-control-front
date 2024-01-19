@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
+import 'package:http/http.dart';
 import 'package:sensor_control_front/src/models/sensor_type.dart';
 import 'package:sensor_control_front/src/services/esp32_client.dart';
-
+import 'package:firebase_database/firebase_database.dart';
 import '../models/Sensor.dart';
 
 class DataDisplay extends StatefulWidget {
@@ -23,9 +23,45 @@ class DataDisplay extends StatefulWidget {
 
 class _DataDisplayState extends State<DataDisplay> {
   ESP32Client esp32client = ESP32Client();
+  final DatabaseReference _readingsRef =
+      FirebaseDatabase.instance.ref('readings');
+  dynamic valueDisplay = 0;
 
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder<DatabaseEvent>(
+      stream: _readingsRef.onValue,
+      builder: (context, snapshot) {
+        if (snapshot.hasData &&
+            !snapshot.hasError &&
+            snapshot.data!.snapshot.value != null) {
+          Map<dynamic, dynamic> readings =
+              Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map);
+          if (widget.sensor.type == SensorType.brightness.name) {
+            dynamic brightness = readings['brightness'];
+            if (brightness is double) {
+              brightness = double.parse(brightness.toStringAsFixed(2));
+            }
+            valueDisplay = brightness;
+          } else {
+            dynamic temperature = readings['temperature'];
+            if (temperature is double) {
+              temperature = double.parse(temperature.toStringAsFixed(2));
+            }
+            valueDisplay = temperature;
+          }
+
+          // Vous pouvez maintenant utiliser ces valeurs pour les afficher dans votre UI
+          // Par exemple, si ce DataDisplay est pour la température:
+          return _buildSensorDisplay(context);
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  InkWell _buildSensorDisplay(BuildContext context) {
     return InkWell(
       onTap: () => _showPopup(context),
       onLongPress: () => _showBottomSheet(context),
@@ -51,8 +87,8 @@ class _DataDisplayState extends State<DataDisplay> {
             Icon(widget.icon, size: 40, color: Colors.blue),
             Text(
               widget.sensor.type == SensorType.temperature.name
-                  ? '${widget.sensor.currentValue}°C'
-                  : widget.sensor.currentValue.toString(),
+                  ? '$valueDisplay°C'
+                  : valueDisplay.toString(),
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -167,12 +203,15 @@ class _DataDisplayState extends State<DataDisplay> {
               onPressed: () async {
                 try {
                   updating = true;
-                  bool isSuccessful = await esp32client.updateThreshold(widget.sensor.type, double.parse(_thresholdController.value.text.trim()));
-                  if(isSuccessful) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Seuil modifié avec succès')));
+                  bool isSuccessful = await esp32client.updateThreshold(
+                      widget.sensor.type,
+                      double.parse(_thresholdController.value.text.trim()));
+                  if (isSuccessful) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Seuil modifié avec succès')));
                   }
                   Navigator.pop(context); // Ferme la boîte de dialogue
-                } catch(e) {
+                } catch (e) {
                   print(e.toString());
                 } finally {
                   updating = false;
