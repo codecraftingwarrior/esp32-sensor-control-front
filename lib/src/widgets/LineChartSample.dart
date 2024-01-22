@@ -1,8 +1,12 @@
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:sensor_control_front/src/models/sensor_type.dart';
 
 class LineChartSample extends StatefulWidget {
-  const LineChartSample({super.key});
+  SensorType type;
+
+  LineChartSample({required this.type, super.key});
 
   @override
   State<LineChartSample> createState() => _LineChartSample2State();
@@ -81,6 +85,47 @@ class _LineChartSample2State extends State<LineChartSample> {
     );
   }
 
+  Widget leftTitleWidgetsTemp(double value, TitleMeta meta) {
+    TextStyle style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 14, // Taille de police plus petite pour éviter le chevauchement
+      color: Colors.black, // Couleur de police pour un meilleur contraste
+    );
+    String text;
+    // Vous pouvez également ajuster les valeurs pour mieux correspondre à votre plage de température
+    switch (value.toInt()) {
+      case 10:
+        text = '10°C';
+        break;
+      case 15:
+        text = '15°C';
+        break;
+      case 20:
+        text = '20°C';
+        break;
+      case 25:
+        text = '25°C';
+        break;
+      case 30:
+        text = '30°C';
+        break;
+      case 35:
+        text = '35°C';
+        break;
+      case 40:
+        text = '40°C';
+        break;
+      default:
+        return Container(); // Ne retournez rien pour les valeurs non spécifiées
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 10.0),
+      // Ajoutez un peu d'espace à droite des étiquettes
+      child: Text(text, style: style, textAlign: TextAlign.right),
+    );
+  }
+
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -144,7 +189,9 @@ class _LineChartSample2State extends State<LineChartSample> {
           sideTitles: SideTitles(
             showTitles: true,
             interval: 1,
-            getTitlesWidget: leftTitleWidgets,
+            getTitlesWidget: widget.type == SensorType.brightness
+                ? leftTitleWidgets
+                : leftTitleWidgetsTemp,
             reservedSize: 42,
           ),
         ),
@@ -156,18 +203,28 @@ class _LineChartSample2State extends State<LineChartSample> {
       minX: 0,
       maxX: 11,
       minY: 0,
-      maxY: 6,
+      maxY: widget.type == SensorType.brightness ? 6 : 40,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
+          spots: widget.type == SensorType.brightness
+              ? const [
+                  FlSpot(0, 3),
+                  FlSpot(2.6, 2),
+                  FlSpot(4.9, 5),
+                  FlSpot(6.8, 3.1),
+                  FlSpot(8, 4),
+                  FlSpot(9.5, 3),
+                  FlSpot(11, 4),
+                ]
+              : const [
+                  FlSpot(0, 20), // Exemple: Température à 20°C au temps 0
+                  FlSpot(2, 22), // Température à 22°C au temps 2
+                  FlSpot(4, 21), // etc...
+                  FlSpot(6, 23),
+                  FlSpot(8, 22),
+                  FlSpot(10, 24),
+                  FlSpot(11, 23),
+                ],
           isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,
@@ -243,7 +300,7 @@ class _LineChartSample2State extends State<LineChartSample> {
       minX: 0,
       maxX: 11,
       minY: 0,
-      maxY: 6,
+      maxY: widget.type == SensorType.brightness ? 6 : 40,
       lineBarsData: [
         LineChartBarData(
           spots: const [
