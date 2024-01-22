@@ -1,0 +1,1 @@
+const String esp32BaseURI = '172.20.10.14';

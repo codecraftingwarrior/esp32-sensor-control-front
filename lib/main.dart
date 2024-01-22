@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'src/screens/home_screen.dart'; // Assurez-vous que le chemin d'accès correspond à l'emplacement du fichier home_screen.dart
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyFlutterApp());
 }
 
@@ -18,7 +24,7 @@ class MyFlutterApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home:
-          const HomeScreen(), // Utilisation de HomeScreen comme écran principal
+      HomeScreen(), // Utilisation de HomeScreen comme écran principal
     );
   }
 }
