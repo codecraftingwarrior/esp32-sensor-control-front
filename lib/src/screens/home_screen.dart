@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sensor_control_front/src/widgets/LineChartSample.dart';
 import '../models/Sensor.dart';
 import '../models/led.dart';
+import '../models/sensor_type.dart';
 import '../services/esp32_client.dart';
 import '../widgets/data_display.dart';
 import '../widgets/led_toggle.dart';
@@ -130,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text('Evolution lumiére 3 derniers Jour', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                            LineChartSample(),
+                            LineChartSample(type: SensorType.brightness),
                           ],
                         )
                     ),
@@ -154,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text('Evolution température 3 derniers Jour', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                            LineChartSample(),
+                            LineChartSample(type: SensorType.temperature),
                           ],
                         )
                     ),
