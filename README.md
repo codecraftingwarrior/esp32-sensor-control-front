@@ -18,6 +18,7 @@ Smart Sensor Control est une application mobile Flutter conçue pour interagir a
 
 - Flutter SDK (version 2.x.x ou supérieure)
 - Dart SDK (version 2.x.x ou supérieure)
+- Une carte ESP32 avec une carte TTGO intégrée
 - Un dispositif physique ou un émulateur pour tester l'application
 - Accès configuré à une instance Firebase Realtime Database
 
