@@ -26,7 +26,7 @@ Smart Sensor Control est une application mobile Flutter conçue pour interagir a
 
 1. Clonez le dépôt Git :
 ```sh
-git clone [https://your-repository-link](https://github.com/codecraftingwarrior/esp32-sensor-control-front.git)
+git clone https://github.com/codecraftingwarrior/esp32-sensor-control-front.git
 cd esp32-sensor-control-front
 ```
 
